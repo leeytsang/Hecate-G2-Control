@@ -152,14 +152,11 @@ tests/
   PeripheralBattery.Core.Tests/
 ```
 
-## 已知限制
+## 兼容性说明
 
-- 仅支持并验证 HECATE G2 无线版 `35BB:A209`。
-- G2 固件提供的是 4 段硬件 EQ，不等同于官方驱动的 10 段 DSP 效果。
-- 不支持 7.1、动态低频、智能音量等依赖 C-Media 驱动或 APO 的功能。
-- 不提供麦克风静音、软件音量同步或实体滚轮音量同步。
-- 不监控游戏进程，也不注册全局 EQ 热键。
-- `IPolicyConfig` 是未公开接口，未来 Windows 更新可能导致兼容性变化。
+- 当前仅在 HECATE G2 无线版 `35BB:A209` 上验证。
+- 自动显隐依赖稳定的 BLE 连接和 Windows 蓝牙栈。
+- `IPolicyConfig` 是未公开接口，Windows 更新后可能需要适配。
 
 ## 常见问题
 
