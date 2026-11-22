@@ -1,0 +1,175 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:PeripheralBattery.App.ViewModels"
+        xmlns:controls="using:PeripheralBattery.App.Controls"
+        xmlns:audio="using:PeripheralBattery.Core.Audio"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        d:DesignWidth="1120" d:DesignHeight="800"
+        x:Class="PeripheralBattery.App.Views.MainWindow"
+        x:DataType="vm:MainViewModel"
+        x:Name="Root"
+        Icon="/Assets/app.ico"
+        Title="HECATE G2 控制台"
+        Width="1120" Height="800"
+        MinWidth="980" MinHeight="700"
+        WindowStartupLocation="CenterScreen"
+        FontFamily="Microsoft YaHei UI"
+        Background="#0B0F14">
+  <Design.DataContext>
+    <vm:MainViewModel />
+  </Design.DataContext>
+
+  <Grid Margin="28,24,28,22" RowDefinitions="Auto,*,Auto" RowSpacing="18">
+    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="14">
+      <Border Width="46" Height="46" CornerRadius="15" Background="#173532">
+        <Grid>
+          <Path Data="M9,31 L9,26 C9,19.9 13.9,15 20,15 C26.1,15 31,19.9 31,26 L31,31 M9,30 C7.3,30 6,31.3 6,33 L6,36 C6,37.7 7.3,39 9,39 L12,39 L12,30 Z M31,30 C32.7,30 34,31.3 34,33 L34,36 C34,37.7 32.7,39 31,39 L28,39 L28,30 Z"
+                Stroke="#35D6C1" StrokeThickness="2.4" StrokeLineCap="Round" StrokeJoin="Round" />
+        </Grid>
+      </Border>
+      <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
+        <StackPanel Orientation="Horizontal" Spacing="10">
+          <TextBlock Text="HECATE G2 控制台" FontSize="24" FontWeight="Bold" Foreground="#F5F8FB" />
+          <Border Background="#17262B" CornerRadius="8" Padding="7,3" VerticalAlignment="Center">
+            <TextBlock Text="LOCAL" FontSize="9" FontWeight="Bold" Foreground="#57D8C6" />
+          </Border>
+        </StackPanel>
+        <TextBlock Text="电量 · 硬件 EQ · 2.4G 端点自动显隐" FontSize="12" Foreground="#7D8A9A" />
+      </StackPanel>
+      <Button Grid.Column="2"
+              Command="{Binding RefreshCommand}"
+              IsEnabled="{Binding CanRefresh}"
+              VerticalAlignment="Center"
+              Padding="16,10"
+              CornerRadius="12"
+              Background="#1B252F"
+              BorderBrush="#2B3744"
+              BorderThickness="1"
+              Foreground="#E8EEF4">
+        <StackPanel Orientation="Horizontal" Spacing="8">
+          <TextBlock Text="⟳" FontSize="17" VerticalAlignment="Center" />
+          <TextBlock Text="刷新" FontSize="13" VerticalAlignment="Center" />
+        </StackPanel>
+      </Button>
+    </Grid>
+
+    <Grid Grid.Row="1" ColumnDefinitions="360,*" ColumnSpacing="18">
+      <StackPanel Spacing="14">
+        <controls:DeviceCard DataContext="{Binding Headset}" Height="310" />
+
+        <Border Background="#141A21" BorderBrush="#25303B" BorderThickness="1" CornerRadius="20" Padding="18">
+          <Grid RowDefinitions="Auto,Auto,Auto" RowSpacing="10">
+            <Grid ColumnDefinitions="*,Auto">
+              <StackPanel Spacing="2">
+                <TextBlock Text="2.4G 端点自动显隐" FontSize="16" FontWeight="SemiBold" Foreground="#F1F5F8" />
+                <TextBlock Text="耳机连接时显示端点，关机或切到蓝牙时隐藏" FontSize="11" Foreground="#7F8C9C" />
+              </StackPanel>
+              <ToggleSwitch Grid.Column="1" IsChecked="{Binding AutoSwitchAudio, Mode=TwoWay}" VerticalAlignment="Center" />
+            </Grid>
+            <Grid Grid.Row="1" ColumnDefinitions="Auto,*" ColumnSpacing="8">
+              <Ellipse Width="7" Height="7" Fill="#45D483" VerticalAlignment="Center" />
+              <TextBlock Grid.Column="1" Text="{Binding PresenceText}" FontSize="12" Foreground="#9EABB8" />
+            </Grid>
+            <StackPanel Grid.Row="2" Spacing="3">
+              <TextBlock Text="Windows 当前输出" FontSize="10" Foreground="#5F6C7A" />
+              <TextBlock Text="{Binding CurrentOutputName}" FontSize="12" Foreground="#D8E0E7" TextWrapping="Wrap" />
+              <TextBlock Text="{Binding AutoSwitchStatus}" FontSize="11" Foreground="#6E7C8B" TextWrapping="Wrap" />
+              <Button Content="恢复音频端点"
+                      Command="{Binding RestoreAudioEndpointsCommand}"
+                      HorizontalAlignment="Left"
+                      Margin="0,8,0,0"
+                      Padding="12,7"
+                      CornerRadius="9"
+                      Background="#1B252F"
+                      BorderBrush="#2B3744"
+                      BorderThickness="1"
+                      FontSize="11" />
+            </StackPanel>
+          </Grid>
+        </Border>
+
+        <Border Background="#141A21" BorderBrush="#25303B" BorderThickness="1" CornerRadius="20" Padding="18">
+          <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+            <StackPanel Spacing="3">
+              <TextBlock Text="开机自动启动" FontSize="16" FontWeight="SemiBold" Foreground="#F1F5F8" />
+              <TextBlock Text="登录 Windows 后驻留托盘并恢复设置" FontSize="11" Foreground="#7F8C9C" />
+            </StackPanel>
+            <ToggleSwitch Grid.Column="1" IsChecked="{Binding StartWithWindows, Mode=TwoWay}" VerticalAlignment="Center" />
+          </Grid>
+        </Border>
+
+      </StackPanel>
+
+      <Border Grid.Column="1" Background="#141A21" BorderBrush="#25303B" BorderThickness="1" CornerRadius="22" Padding="24">
+        <Grid RowDefinitions="Auto,Auto,*,Auto" RowSpacing="18">
+          <Grid ColumnDefinitions="*,Auto">
+            <StackPanel Spacing="3">
+              <TextBlock Text="硬件 EQ" FontSize="20" FontWeight="Bold" Foreground="#F2F6F9" />
+              <TextBlock Text="直接写入 G2 耳机固件 · 4 段 · 每段 ±3 dB" FontSize="11" Foreground="#7F8C9C" />
+            </StackPanel>
+            <Border Grid.Column="1" Background="#17312E" CornerRadius="10" Padding="11,6" VerticalAlignment="Center">
+              <TextBlock Text="{Binding EqModeText}" FontSize="11" Foreground="#61DCC9" />
+            </Border>
+          </Grid>
+
+          <Border Grid.Row="1" Background="#10161D" BorderBrush="#202A34" BorderThickness="1" CornerRadius="14" Padding="14,12">
+            <StackPanel Spacing="8">
+              <TextBlock Text="游戏预设" FontSize="11" Foreground="#6F7D8D" />
+              <ListBox ItemsSource="{Binding EqPresets}"
+                       SelectedItem="{Binding SelectedPreset, Mode=TwoWay}"
+                       Background="Transparent"
+                       BorderThickness="0"
+                       Padding="0"
+                       MaxHeight="108"
+                       ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                <ListBox.ItemsPanel>
+                  <ItemsPanelTemplate>
+                    <WrapPanel />
+                  </ItemsPanelTemplate>
+                </ListBox.ItemsPanel>
+                <ListBox.ItemTemplate>
+                  <DataTemplate x:DataType="audio:EqPreset">
+                    <TextBlock Text="{Binding Name}" FontSize="12" Margin="3,2" />
+                  </DataTemplate>
+                </ListBox.ItemTemplate>
+              </ListBox>
+            </StackPanel>
+          </Border>
+
+          <StackPanel Grid.Row="2" Spacing="6" VerticalAlignment="Center">
+            <ItemsControl ItemsSource="{Binding EqBands}">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="vm:EqBandViewModel">
+                  <Grid ColumnDefinitions="72,*,64" ColumnSpacing="12" Margin="0,8">
+                    <TextBlock Text="{Binding FrequencyLabel}" FontSize="12" Foreground="#C4CFD9" VerticalAlignment="Center" />
+                    <Slider Grid.Column="1"
+                            Minimum="-3" Maximum="3"
+                            TickFrequency="0.5"
+                            IsSnapToTickEnabled="True"
+                            Value="{Binding GainDb, Mode=TwoWay}"
+                            VerticalAlignment="Center" />
+                    <TextBlock Grid.Column="2" Text="{Binding GainText}" FontSize="12" Foreground="#8DD9CE" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                  </Grid>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </StackPanel>
+
+          <Grid Grid.Row="3" ColumnDefinitions="*,Auto,Auto" ColumnSpacing="10">
+            <TextBlock Text="{Binding EqStatus}" FontSize="11" Foreground="#7F8C9C" VerticalAlignment="Center" TextWrapping="Wrap" />
+            <Button Grid.Column="1" Content="恢复默认" Command="{Binding ResetEqCommand}" Padding="14,9" CornerRadius="10" Background="#1B252F" BorderBrush="#2B3744" BorderThickness="1" FontSize="12" />
+            <Button Grid.Column="2" Content="应用 EQ" Command="{Binding ApplyEqCommand}" Padding="18,9" CornerRadius="10" Background="#1F5E56" BorderBrush="#2D8B7F" BorderThickness="1" Foreground="#E9FFFB" FontWeight="SemiBold" FontSize="12" />
+          </Grid>
+        </Grid>
+      </Border>
+    </Grid>
+
+    <Grid Grid.Row="2" ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
+      <Ellipse Width="8" Height="8" Fill="#45D483" VerticalAlignment="Center" />
+      <TextBlock Grid.Column="1" Text="{Binding StatusSummary}" FontSize="12" Foreground="#98A5B3" VerticalAlignment="Center" />
+      <TextBlock Grid.Column="2" Text="{Binding LastUpdatedText}" FontSize="12" Foreground="#687585" VerticalAlignment="Center" />
+    </Grid>
+  </Grid>
+</Window>

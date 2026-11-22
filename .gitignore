@@ -1,0 +1,26 @@
+# Build output
+bin/
+obj/
+artifacts/
+publish/
+*.pdb
+*.nupkg
+
+# IDE and local state
+.vs/
+.vscode/
+.idea/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Local reverse-engineering and release material
+tools/
+*.log
+*.dump
+*.bin
+
+# OS metadata
+.DS_Store
+Thumbs.db
